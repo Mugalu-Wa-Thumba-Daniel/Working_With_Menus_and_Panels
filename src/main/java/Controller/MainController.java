@@ -2,17 +2,15 @@ package Controller;
 
 import Model.Doctors;
 import Model.Patients;
-import Views.HomePanel;
-import Views.PatientsPanel;
 import Views.DoctorsPanel;
+import Views.PatientsPanel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * MainController handles the navigation between different panels and manages data interactions.
+ * MainController handles the navigation between different views and manages data interactions.
  */
 public class MainController {
     private JFrame mainFrame;
@@ -39,13 +37,19 @@ public class MainController {
     }
 
     /**
-     * Displays the specified card panel.
-     *
-     * @param cardName the name of the card panel to display
+     * Shows the doctors view.
      */
-    public void showCard(String cardName) {
-        CardLayout cardLayout = (CardLayout) ((JPanel) mainFrame.getContentPane().getComponent(0)).getLayout();
-        cardLayout.show((JPanel) mainFrame.getContentPane().getComponent(0), cardName);
+    public void showDoctorsView() {
+        DoctorsPanel doctorsPanel = new DoctorsPanel(doctorsList);
+        doctorsPanel.setVisible(true);
+    }
+
+    /**
+     * Shows the patients view.
+     */
+    public void showPatientsView() {
+        PatientsPanel patientsPanel = new PatientsPanel(patientsList);
+        patientsPanel.setVisible(true);
     }
 
     public List<Doctors> getDoctorsList() {

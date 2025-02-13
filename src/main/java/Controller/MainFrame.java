@@ -1,8 +1,8 @@
 package Controller;
 
+import Views.DoctorsPanel;
 import Views.HomePanel;
 import Views.PatientsPanel;
-import Views.DoctorsPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,29 +10,23 @@ import java.util.List;
 import Model.Doctors;
 import Model.Patients;
 
-/**
- * MainFrame is the main window of the application.
- * It sets up the user interface and navigation.
- */
-public class MainFrame extends JFrame {
+public class MainFrame {
+    private JFrame frame;
     private MainController mainController;
     private List<Doctors> doctorsList;
     private List<Patients> patientsList;
 
     public MainFrame() {
-        setTitle("Hospital Data");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
-        setLocationRelativeTo(null);
+        frame = new JFrame("Hospital Data");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setLocationRelativeTo(null);
 
-        mainController = new MainController(this); // Initialize MainController
+        mainController = new MainController(frame); // Initialize MainController
 
         configureMenuBar();
-        configureMainPanel();
-        setVisible(true);
-
-        // Show the home panel on startup
-        mainController.showCard("homeCard");
+        configureComponents();
+        frame.setVisible(true);
     }
 
     /**
@@ -45,54 +39,114 @@ public class MainFrame extends JFrame {
         JMenuItem patientsItem = new JMenuItem("Patients");
         JMenuItem doctorsItem = new JMenuItem("Doctors");
 
-        homeItem.addActionListener(e -> mainController.showCard("homeCard"));
-        patientsItem.addActionListener(e -> mainController.showCard("patientsCard"));
-        doctorsItem.addActionListener(e -> mainController.showCard("doctorsCard"));
+        homeItem.addActionListener(e -> showHomePanel());
+        patientsItem.addActionListener(e -> showPatientsPanel());
+        doctorsItem.addActionListener(e -> showDoctorsPanel());
 
         menu.add(homeItem);
         menu.add(patientsItem);
         menu.add(doctorsItem);
         menuBar.add(menu);
 
-        setJMenuBar(menuBar);
+        frame.setJMenuBar(menuBar);
     }
 
     /**
-     * Configures the main panel with different card panels.
+     * Configures the components with their actions.
      */
-    private void configureMainPanel() {
-        CardLayout cardLayout = new CardLayout();
-        JPanel mainPanel = new JPanel(cardLayout);
+    private void configureComponents() {
+        frame.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        HomePanel homePanel = new HomePanel(this);
-        JPanel menuPanel = new JPanel(new BorderLayout());
-        menuPanel.add(new JLabel("Principal Menu", JLabel.CENTER), BorderLayout.NORTH);
-        menuPanel.add(new JPanel(), BorderLayout.CENTER); // Placeholder panel
+        JLabel iconLabel = new JLabel(new ImageIcon("src/main/resources/images/image_2.png")); // Remplace le chemin par le chemin de ton icône
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.CENTER;
+        frame.add(iconLabel, gbc);
 
-        // Initialize the lists of doctors and patients in MainFrame
-        doctorsList = new ArrayList<>();
-        patientsList = new ArrayList<>();
-        loadSampleData();
+        JLabel mainNavLabel = new JLabel("H+ Main Navigation", JLabel.CENTER);
+        mainNavLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 3;
+        frame.add(mainNavLabel, gbc);
 
-        PatientsPanel patientsPanel = new PatientsPanel(cardLayout, mainPanel, patientsList);
-        DoctorsPanel doctorsPanel = new DoctorsPanel(cardLayout, mainPanel, doctorsList);
+        JButton homeButton = new JButton("Home");
+        homeButton.setPreferredSize(new Dimension(200, 50));
+        homeButton.addActionListener(e -> {
+            HomePanel homePanel = new HomePanel();
+            homePanel.setVisible(true);
+            frame.dispose();
+        });
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 1;
+        frame.add(homeButton, gbc);
 
-        mainPanel.add(homePanel, "homeCard");
-        mainPanel.add(menuPanel, "menuCard");
-        mainPanel.add(patientsPanel, "patientsCard");
-        mainPanel.add(doctorsPanel, "doctorsCard");
+        JButton doctorsButton = new JButton("Doctors");
+        doctorsButton.setPreferredSize(new Dimension(200, 50));
+        doctorsButton.addActionListener(e -> {
+            if (doctorsList == null) {
+                loadSampleData();
+            }
+            DoctorsPanel doctorsPanel = new DoctorsPanel(doctorsList);
+            doctorsPanel.setVisible(true);
+            frame.dispose();
+        });
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        frame.add(doctorsButton, gbc);
 
-        add(mainPanel);
+        JButton patientsButton = new JButton("Patients");
+        patientsButton.setPreferredSize(new Dimension(200, 50));
+        patientsButton.addActionListener(e -> {
+            if (patientsList == null) {
+                loadSampleData();
+            }
+            PatientsPanel patientsPanel = new PatientsPanel(patientsList);
+            patientsPanel.setVisible(true);
+            frame.dispose();
+        });
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        frame.add(patientsButton, gbc);
     }
 
-    /**
-     * Loads sample data for doctors and patients.
-     */
+    private void showHomePanel() {
+        HomePanel homePanel = new HomePanel();
+        homePanel.setVisible(true);
+    }
+
+    private void showDoctorsPanel() {
+        if (doctorsList == null) {
+            loadSampleData();
+        }
+        DoctorsPanel doctorsPanel = new DoctorsPanel(doctorsList);
+        doctorsPanel.setVisible(true);
+    }
+
+    private void showPatientsPanel() {
+        if (patientsList == null) {
+            loadSampleData();
+        }
+        PatientsPanel patientsPanel = new PatientsPanel(patientsList);
+        patientsPanel.setVisible(true);
+    }
+
     private void loadSampleData() {
+        doctorsList = new ArrayList<>();
         doctorsList.add(new Doctors(1, "Dr. Alice Brown", "Cardiology"));
         doctorsList.add(new Doctors(2, "Dr. Bob Johnson", "Neurology"));
 
+        patientsList = new ArrayList<>();
         patientsList.add(new Patients(1, "John Doe", 25, "Flu"));
         patientsList.add(new Patients(2, "Jane Smith", 30, "Fracture"));
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new MainFrame());
     }
 }

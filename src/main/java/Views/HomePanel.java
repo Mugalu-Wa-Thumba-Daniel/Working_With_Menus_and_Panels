@@ -8,38 +8,51 @@ import java.awt.*;
  * HomePanel is the welcome screen of the application.
  * It displays a welcome message and an enter button to navigate to the menu.
  */
-public class HomePanel extends JPanel {
-    private MainFrame mainFrame;
+public class HomePanel {
+    private JFrame frame;
 
-    public HomePanel(MainFrame mainFrame) {
-        this.mainFrame = mainFrame;
-        setLayout(new BorderLayout());
-        configureWelcomeLabel();
-        configureEnterButton();
+    public HomePanel() {
+        frame = new JFrame("Welcome To Hospital H+");
+        frame.setSize(800, 600);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new GridBagLayout());
+        configureComponents();
     }
 
-    /**
-     * Configures the welcome label and adds it to the panel.
-     */
-    private void configureWelcomeLabel() {
-        JLabel welcomeLabel = new JLabel("Welcome to the App", JLabel.CENTER);
+    private void configureComponents() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        JLabel iconLabel = new JLabel(new ImageIcon("src/main/resources/images/image_1.png")); // Remplace le chemin par le chemin de ton icône
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        frame.add(iconLabel, gbc);
+
+        JLabel welcomeLabel = new JLabel("Welcome To Hospital H+", JLabel.CENTER);
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        add(welcomeLabel, BorderLayout.NORTH);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        frame.add(welcomeLabel, gbc);
+
+        JButton enterButton = new JButton("Enter");
+        enterButton.setPreferredSize(new Dimension(300, 40));
+        enterButton.setFont(new Font("Arial", Font.BOLD, 17));
+        enterButton.addActionListener(e -> {
+            new MainFrame();
+            frame.dispose();
+        });
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        frame.add(enterButton, gbc);
     }
 
-    /**
-     * Configures the enter button and adds it to the panel.
-     */
-    private void configureEnterButton() {
-        JButton enterButton = new JButton("Enter");
-        enterButton.setPreferredSize(new Dimension(200, 50));
-        enterButton.addActionListener(e -> {
-            CardLayout cl = (CardLayout) getParent().getLayout();
-            cl.show(getParent(), "menuCard");
-        });
-
-        JPanel buttonPanel = new JPanel(new GridBagLayout());
-        buttonPanel.add(enterButton);
-        add(buttonPanel, BorderLayout.CENTER);
+    public void setVisible(boolean visible) {
+        frame.setVisible(visible);
     }
 }

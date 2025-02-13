@@ -1,26 +1,79 @@
 package Views;
 
-import Model.Doctors;
+import Controller.MainFrame;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import Model.Doctors;
+import Controller.MainController;
 
 /**
  * DoctorsPanel is the panel that displays the list of doctors.
  * It includes a table with doctor data and buttons for Add, Edit, Delete, and Refresh.
  */
-public class DoctorsPanel extends JPanel {
+public class DoctorsPanel {
+    private JFrame frame;
     private JTable table;
     private List<Doctors> doctorsList;
     private DefaultTableModel tableModel;
 
-    public DoctorsPanel(CardLayout cardLayout, JPanel mainPanel, List<Doctors> doctorsList) {
+    public DoctorsPanel(List<Doctors> doctorsList) {
+        frame = new JFrame("Doctors List");
+        frame.setSize(800, 600);
+        frame.setLocationRelativeTo(null);
         this.doctorsList = doctorsList;
-        setLayout(new BorderLayout());
+        frame.setLayout(new BorderLayout());
+
+        configureMenuBar();
         configureLabel();
         configureTable();
         configureButtons();
+    }
+
+    /**
+     * Configures the menu bar with menu items and their actions.
+     */
+    private void configureMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu navigationMenu = new JMenu("Navigation");
+        JMenuItem homeItem = new JMenuItem("Home");
+        JMenuItem backItem = new JMenuItem("Back");
+
+        homeItem.addActionListener(e -> {
+            HomePanel homePanel = new HomePanel();
+            homePanel.setVisible(true);
+            frame.dispose();
+        });
+        backItem.addActionListener(e -> {
+            new MainFrame();
+            frame.dispose();
+        });
+
+        navigationMenu.add(homeItem);
+        navigationMenu.add(backItem);
+
+        JMenu manageDataMenu = new JMenu("Manage Data");
+        JMenuItem patientsItem = new JMenuItem("Patients");
+        JMenuItem doctorsItem = new JMenuItem("Doctors");
+
+        patientsItem.addActionListener(e -> {
+            PatientsPanel patientsPanel = new PatientsPanel(new MainController(frame).getPatientsList());
+            patientsPanel.setVisible(true);
+            frame.dispose();
+        });
+        doctorsItem.addActionListener(e -> {
+            // Stay on the same panel
+        });
+
+        manageDataMenu.add(patientsItem);
+        manageDataMenu.add(doctorsItem);
+
+        menuBar.add(navigationMenu);
+        menuBar.add(manageDataMenu);
+
+        frame.setJMenuBar(menuBar);
     }
 
     /**
@@ -28,7 +81,7 @@ public class DoctorsPanel extends JPanel {
      */
     private void configureLabel() {
         JLabel label = new JLabel("Doctors List", JLabel.CENTER);
-        add(label, BorderLayout.NORTH);
+        frame.add(label, BorderLayout.NORTH);
     }
 
     /**
@@ -44,7 +97,7 @@ public class DoctorsPanel extends JPanel {
         }
 
         table = new JTable(tableModel);
-        add(new JScrollPane(table), BorderLayout.CENTER);
+        frame.add(new JScrollPane(table), BorderLayout.CENTER);
     }
 
     /**
@@ -68,7 +121,7 @@ public class DoctorsPanel extends JPanel {
         buttonPanel.add(deleteButton);
         buttonPanel.add(refreshButton);
 
-        add(buttonPanel, BorderLayout.SOUTH);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
     }
 
     /**
@@ -104,7 +157,7 @@ public class DoctorsPanel extends JPanel {
                 tableModel.setValueAt(specialisation, selectedRow, 2);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Please select a doctor to edit.");
+            JOptionPane.showMessageDialog(frame, "Please select a doctor to edit.");
         }
     }
 
@@ -117,7 +170,7 @@ public class DoctorsPanel extends JPanel {
             doctorsList.remove(selectedRow);
             tableModel.removeRow(selectedRow);
         } else {
-            JOptionPane.showMessageDialog(this, "Please select a doctor to delete.");
+            JOptionPane.showMessageDialog(frame, "Please select a doctor to delete.");
         }
     }
 
@@ -129,5 +182,9 @@ public class DoctorsPanel extends JPanel {
         for (Doctors doctor : doctorsList) {
             tableModel.addRow(new Object[]{doctor.getId(), doctor.getName(), doctor.getSpecialisation()});
         }
+    }
+
+    public void setVisible(boolean visible) {
+        frame.setVisible(visible);
     }
 }
