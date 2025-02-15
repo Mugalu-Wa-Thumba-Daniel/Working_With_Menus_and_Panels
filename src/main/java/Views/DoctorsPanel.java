@@ -127,7 +127,7 @@ public class DoctorsPanel {
     /**
      * Adds a new doctor to the list and table.
      */
-    private void addDoctor() {
+    void addDoctor() {
         int id = doctorsList.size() + 1;
         String name = JOptionPane.showInputDialog("Enter doctor's name:");
         String specialisation = JOptionPane.showInputDialog("Enter doctor's specialisation:");
@@ -164,7 +164,7 @@ public class DoctorsPanel {
     /**
      * Deletes the selected doctor from the list and table.
      */
-    private void deleteDoctor() {
+    void deleteDoctor() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
             doctorsList.remove(selectedRow);

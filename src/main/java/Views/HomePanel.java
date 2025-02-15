@@ -52,7 +52,12 @@ public class HomePanel {
         frame.add(enterButton, gbc);
     }
 
-    public void setVisible(boolean visible) {
+    public boolean setVisible(boolean visible) {
         frame.setVisible(visible);
+        return visible;
+    }
+
+    public boolean isVisible() {
+        return false;
     }
 }
