@@ -10,21 +10,21 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean install'  // Compile the Java project using Maven
+                bat 'mvn clean install'  // Compile the Java project using Maven
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {  // Run code analysis using SonarQube
-                    sh 'mvn sonar:sonar'
+                    bat 'mvn sonar:sonar'
                 }
             }
         }
 
         stage('Test') {
             steps {
-                sh 'mvn test'  // Run unit tests
+                bat 'mvn test'  // Run unit tests
             }
         }
     }
