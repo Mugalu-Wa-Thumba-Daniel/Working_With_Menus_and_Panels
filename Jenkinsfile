@@ -16,7 +16,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {  // Run code analysis using SonarQube
+                withSonarQubeEnv('SonarTest') {  // Run code analysis using SonarQube
                     bat 'mvn sonar:sonar'
                 }
             }
