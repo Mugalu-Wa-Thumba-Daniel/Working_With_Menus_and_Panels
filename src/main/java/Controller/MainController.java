@@ -27,6 +27,7 @@ public class MainController {
         loadSampleData();
     }
 
+
     /**
      * Loads sample data for doctors and patients.
      */
