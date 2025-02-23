@@ -41,7 +41,7 @@ pipeline {
         stage('Deploy to Itch.io') {
             steps {
                 withCredentials([string(credentialsId: 'itch.io', variable: 'ITCH_API_KEY')]) {
-                    bat 'set BUTLER_API_KEY=%ITCH_API_KEY% && "%BUTLER_PATH%" push app.zip fasto/game:windows'  // Replace game ID if needed
+                    bat 'set BUTLER_API_KEY=%ITCH_API_KEY% && "%BUTLER_PATH%" push app.zip emma-nam/fasto:windows'  // Replace game ID if needed
                 }
             }
         }
