@@ -34,6 +34,7 @@ pipeline {
 
         stage('Package for Deployment') {
             steps {
+                 bat 'powershell Remove-Item -Path app.zip -ErrorAction Ignore'  // Delete existing zip if it exists
                 bat 'powershell Compress-Archive -Path target/* -DestinationPath app.zip'  // Package the output JAR
             }
         }
