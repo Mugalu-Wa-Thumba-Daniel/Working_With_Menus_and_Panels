@@ -15,7 +15,7 @@ public class Doctors {
         this.name = name;
         this.specialisation = specialisation;
     }
-
+  
     // Getter and Setter for ID
     public int getId() {
         return id;
